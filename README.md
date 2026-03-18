@@ -1,5 +1,6 @@
 # Social Search MCP Server
 
+<!-- mcp-name: io.github.shubhamekapure/social-search-mcp -->
 A Model Context Protocol (MCP) server that empowers LLMs to search across specific social media platforms using the industry's best search engines.
 
 ## Overview

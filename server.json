@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.shubhamekapure/social-search-mcp",
+  "description": "Deep social media search for LLMs: Facebook, Reddit, LinkedIn, Instagram & more.",
+  "repository": {
+    "url": "https://github.com/shubhamekapure/social-search-mcp",
+    "source": "github"
+  },
+  "version": "0.1.2",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "social-search-mcp",
+      "version": "0.1.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SEARCH_PROVIDER",
+          "description": "Search backend: 'serper', 'searxng', or 'google'. Default: searxng",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "SERPER_API_KEY",
+          "description": "API key from serper.dev. Required if SEARCH_PROVIDER=serper.",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "SEARXNG_URL",
+          "description": "URL of your SearXNG instance. Default: http://localhost:8080",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
