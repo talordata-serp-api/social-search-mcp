@@ -138,82 +138,34 @@ async def handle_list_tools() -> list[types.Tool]:
     return [
         types.Tool(
             name="search_social",
-            description=(
-                "Search social media platforms (Facebook, Reddit, LinkedIn, Instagram, Twitter/X, TikTok, Pinterest, Snapchat) "
-                "for real-world content like rental listings, second-hand items, events, job posts, community discussions, and more. "
-                "Use this instead of a regular web search when the user is looking for content posted by real people on social platforms. "
-                "\n\nCommon use cases:\n"
-                "- Rental listings (2BHK, apartments, PGs, rooms): search facebook + reddit\n"
-                "- Second-hand items or marketplace deals: search facebook\n"
-                "- Professional networking or job posts: search linkedin\n"
-                "- Local events or meetups: search facebook + reddit + linkedin\n"
-                "- Tech discussions, recommendations, or opinions: search reddit + twitter\n"
-                "- Trending topics or news reactions: search twitter + reddit\n"
-                "\nALWAYS infer the right platforms from context. If the user mentions India, set gl='in'. "
-                "If the user asks for recent results, use time_filter='week' or 'month'. "
-                "Do NOT ask the user to specify platforms or gl — infer them yourself from the query context."
-            ),
+            description="Perform a web search focused ONLY on specific social media platforms.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": (
-                            "The exact search query. Be specific — include location, item type, and key details. "
-                            "Example: 'rent 2BHK fully furnished apartment sector 43 Gurgaon' or 'used iPhone 15 pro max for sale Mumbai'."
-                        )
+                        "description": "The search query (e.g. '2bhk rent sector 43', 'used mountain bike', 'AI networking events')"
                     },
                     "platforms": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": (
-                            "Social platforms to restrict the search to. Infer from context:\n"
-                            "- 'facebook': best for rentals, second-hand goods, local groups, events\n"
-                            "- 'reddit': best for reviews, recommendations, community discussions\n"
-                            "- 'linkedin': best for jobs, professional events, company updates\n"
-                            "- 'twitter' or 'x': best for trending topics, real-time news, opinions\n"
-                            "- 'instagram': best for brand content, lifestyle, visual discovery\n"
-                            "- 'tiktok': best for viral trends, short video content\n"
-                            "- 'pinterest': best for ideas, design inspiration, DIY\n"
-                            "If unsure, default to ['facebook', 'reddit']. Leave empty to search all platforms."
-                        )
+                        "description": "Social platforms to target. Highly recommended: 'facebook' (rentals/marketplace), 'reddit' (discussions/advice), 'linkedin' (jobs/networking), 'instagram', 'twitter', 'tiktok', 'snapchat', 'pinterest'."
                     },
                     "max_results": {
                         "type": "integer",
-                        "description": "Number of results to return. Default is 10. Max is 30. Use more for broader discovery, fewer for focused answers."
+                        "description": "Number of results (1-10). Note: High counts may hit API limits on some backends."
                     },
                     "time_filter": {
                         "type": "string",
-                        "description": (
-                            "Filter results by recency. Use this when the user wants recent or up-to-date info:\n"
-                            "- 'day': past 24 hours — use for breaking news or very fresh listings\n"
-                            "- 'week': past 7 days — good default for rentals, events, job posts\n"
-                            "- 'month': past 30 days — broader discovery\n"
-                            "- 'year': past year — for long-term research\n"
-                            "Omit entirely for relevance-based results (all time)."
-                        )
+                        "description": "Find recent content. Options: 'day' (last 24h), 'week', 'month', 'year'. Default is all time/relevance."
                     },
                     "gl": {
                         "type": "string",
-                        "description": (
-                            "Geolocation country code to bias results toward a specific country. "
-                            "ALWAYS set this based on context:\n"
-                            "- 'in' → India (Gurgaon, Mumbai, Bangalore, Delhi, etc.)\n"
-                            "- 'us' → United States\n"
-                            "- 'gb' → United Kingdom\n"
-                            "- 'au' → Australia\n"
-                            "- 'ca' → Canada\n"
-                            "- 'sg' → Singapore\n"
-                            "- 'ae' → UAE / Dubai\n"
-                            "Default to 'us' if no location is evident from the query."
-                        )
+                        "description": "Two-letter country code for regional targeting (e.g. 'in' for India, 'us' for USA, 'gb' for UK). Crucial for localized queries like neighborhood rentals."
                     },
                     "hl": {
                         "type": "string",
-                        "description": (
-                            "Language code for results. Use 'hi' for Hindi, 'en' for English. "
-                            "Only set if the user explicitly asks for a non-English language."
-                        )
+                        "description": "Language code for the search results (e.g. 'en', 'hi', 'es')."
                     }
                 },
                 "required": ["query"]

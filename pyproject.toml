@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "social-search-mcp"
-version = "0.1.2"
+version = "0.1.3"
 description = "A Model Context Protocol (MCP) server for deep social media search (SearXNG, Serper, Google)."
 readme = "README.md"
 authors = [
