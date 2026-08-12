@@ -26,6 +26,13 @@ The official Google Custom Search API.
 - `GOOGLE_API_KEY=your_key`
 - `GOOGLE_CX=your_cx_engine_id`
 
+### 4. TalorData
+
+A fast and cost-effective Google Search API tailored for AI Agents.
+
+- `SEARCH_PROVIDER=talordata`
+- `TALORDATA_API_KEY=your_key` (Get one from [talordata.com](https://talordata.com/?campaignid=9Xaq0RfSFf7RS4Xe&utm_source=ssm&utm_term=ssm))
+
 ## Setup
 Ensure you have Python 3.10+ installed.
 
