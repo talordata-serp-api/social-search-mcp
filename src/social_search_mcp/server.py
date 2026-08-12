@@ -53,6 +53,52 @@ def search_searxng(query: str, max_results: int = 10, time_filter: str = None):
         })
     return results
 
+def search_talordata(query: str, max_results: int = 10, time_filter: str = None) -> list:
+    """使用 TalorData SERP API 进行搜索并返回统一格式的列表"""
+    import requests
+    
+    api_key = os.environ.get("TALORDATA_API_KEY")
+    if not api_key:
+        return "ERROR: Missing `TALORDATA_API_KEY` environment variable."
+        
+    # TalorData 标准 Google 搜索端点
+    url = "https://talordata.com" 
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "q": query,
+        "engine": "google"
+    }
+    
+    # 兼容原项目的过滤参数
+    if time_filter:
+        payload["time_filter"] = time_filter
+
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return f"TalorData Error ({response.status_code}): {response.text}"
+            
+        data = response.json()
+        
+        # 提取 TalorData 的自然搜索结果列表（通常是 organic_results）
+        raw_results = data.get("organic_results", [])[:max_results]
+        
+        # 将其转化为原项目标准格式并返回
+        results = []
+        for item in raw_results:
+            results.append({
+                "title": item.get("title", "No Title"),
+                "url": item.get("link", item.get("url", "")),
+                "snippet": item.get("snippet", item.get("description", ""))
+            })
+        return results
+        
+    except Exception as e:
+        return f"Error connecting to TalorData: {str(e)}"
+
 def search_serper(query: str, max_results: int = 10, time_filter: str = None, gl: str = None, hl: str = None):
     api_key = os.environ.get("SERPER_API_KEY")
     if not api_key:
@@ -211,9 +257,11 @@ async def handle_call_tool(
     elif provider == "serper":
         results = search_serper(final_query, max_results=max_results, time_filter=time_filter, gl=gl, hl=hl)
     elif provider == "google":
-        results = search_google(final_query, max_results=max_results, time_filter=time_filter)
-    else:
-        return [types.TextContent(type="text", text=f"ERROR: Unknown SEARCH_PROVIDER '{provider}'. Use 'searxng', 'serper', or 'google'.")]
+    results = search_google(final_query, max_results=max_results, time_filter=time_filter)
+elif provider == "talordata":
+    results = search_talordata(final_query, max_results=max_results, time_filter=time_filter)
+else:
+    return [types.TextContent(type="text", text=f"ERROR: Unknown SEARCH_PROVIDER '{provider}'. Use 'searxng', 'serper', 'google', or 'talordata'.")]
 
     if isinstance(results, str):  # Error message returned
         return [types.TextContent(type="text", text=results)]
